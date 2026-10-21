@@ -77,6 +77,7 @@ int main() {
                     cout << "Copy cancelled.\n";
                     continue;
                 }
+                //.
             }
             ifstream fin(filename.c_str(), ios::binary);
             ofstream fout(outputFile.c_str(), ios::binary);
