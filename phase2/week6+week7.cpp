@@ -422,6 +422,7 @@ int main() {
                              << frequency[i] << "\n";
                 }
             }
+        
             else {
                 HuffmanNode* root = buildHuffmanTree(frequency);
 
