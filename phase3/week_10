@@ -6,3 +6,17 @@ for (int i = 0; i < 256; ++i)
 
 const uint64_t headerSize = 6 + 1 + 8 + 256 * 8; // 2063 bytes
 uint64_t huffmanTotal = headerSize + (estimatedBits + 7) / 8;
+
+cout << "Compression completed!\n";
+cout << "Output: " << outputName << "\n";
+cout << "Original size: " << originalSize << " bytes\n";
+cout << "Estimated compressed size: " << huffmanTotal << " bytes\n";
+cout << "Actual compressed size: " << compressedSize << " bytes\n";
+int64_t saved = static_cast<int64_t>(originalSize) - static_cast<int64_t>(compressedSize);
+cout << "Bytes saved: " << saved << "\n";
+if (originalSize > 0)
+    cout << "Space saved: " << (saved * 100 / static_cast<int64_t>(originalSize)) << "%\n";
+else
+    cout << "Space saved: 0%\n";
+cout << "Mode: " << (useHuffman ? "HUFFMAN" : "RAW") << "\n";
+
