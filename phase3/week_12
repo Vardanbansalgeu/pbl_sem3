@@ -12,3 +12,28 @@ int handleCommandLine(int argc, char* argv[]) {
     cout << "Unknown command: " << command << "\n";
     return 1;
 }
+int main(int argc, char* argv[]) {
+
+    if (argc == 2 &&
+        (string(argv[1]) == "-h" ||
+         string(argv[1]) == "--help" ||
+         string(argv[1]) == "/?")) {
+
+        cout << "SmartFile Compression Utility\n";
+        cout << "Usage:\n";
+        cout << argv[0] << " compress <input> <output>\n";
+        cout << argv[0] << " decompress <archive> <output>\n";
+        return 0;
+    }
+
+    if (argc >= 4)
+        return handleCommandLine(argc, argv);
+
+    if (argc > 1) {
+        cout << "Invalid arguments!\n";
+        return 1;
+    }
+
+    runInteractiveMenu();
+    return 0;
+}
