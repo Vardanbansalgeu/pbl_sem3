@@ -52,7 +52,62 @@ void handleCompression() {
             cout << "Compression cancelled.\n\n";
             return;
         }
+
     }
 
     compressFile(inputFilename, outputFilename);
+}
+void handleDecompression() {
+    string inputFilename, outputFilename;
+
+    cout << "\n--- DECOMPRESS FILE ---\n";
+    cout << "Enter .sfile path: ";
+    getline(cin, inputFilename);
+
+    inputFilename = cleanPath(inputFilename);
+
+    if (inputFilename.empty()) {
+        cout << "Error: File path cannot be empty.\n\n";
+        return;
+    }
+
+    if (!fileExists(inputFilename)) {
+        cout << "Error: File '" << inputFilename << "' not found!\n\n";
+        return;
+    }
+
+    string defaultOutput;
+
+    if (inputFilename.size() > 6 &&
+        inputFilename.substr(inputFilename.size() - 6) == ".sfile")
+        defaultOutput = inputFilename.substr(0, inputFilename.size() - 6);
+    else
+        defaultOutput = inputFilename + ".decompressed";
+
+    cout << "Enter output restored file path (press Enter for '"
+         << defaultOutput << "'): ";
+    getline(cin, outputFilename);
+
+    outputFilename = cleanPath(outputFilename);
+
+    if (outputFilename.empty())
+        outputFilename = defaultOutput;
+
+    if (isSameFile(inputFilename, outputFilename)) {
+        cout << "Error: Output path must be different from archive path!\n\n";
+        return;
+    }
+
+    if (fileExists(outputFilename)) {
+        cout << "Warning: Output file already exists. Overwrite? (y/n): ";
+        string ans;
+        getline(cin, ans);
+
+        if (ans.empty() || (ans[0] != 'y' && ans[0] != 'Y')) {
+            cout << "Decompression cancelled.\n\n";
+            return;
+        }
+    }
+
+    decompressFile(inputFilename, outputFilename);
 }
