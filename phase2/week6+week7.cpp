@@ -21,7 +21,7 @@ public:
         right = nullptr;
     }
 };
-...
+....
 class Compare {
 public:
     bool operator()(HuffmanNode* a, HuffmanNode* b) {
