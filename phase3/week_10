@@ -1,0 +1,8 @@
+// Week 10: estimated compressed size in bits (payload only).
+uint64_t estimatedBits = 0;
+for (int i = 0; i < 256; ++i)
+    if (frequency[i] > 0)
+        estimatedBits += frequency[i] * static_cast<uint64_t>(codes[i].size());
+
+const uint64_t headerSize = 6 + 1 + 8 + 256 * 8; // 2063 bytes
+uint64_t huffmanTotal = headerSize + (estimatedBits + 7) / 8;
