@@ -15,9 +15,4 @@ A lossless C++ command-line file compression and decompression tool built with s
 - **Interface:** Command-Line Interface (CLI)
 - **Format:** Custom `.sfile` binary format with `RAW` fallback
 
-## Build & Run
 
-Compile the project with a C++ compiler supporting C++17 or later (replace source filenames with your actual project files):
-
-```bash
-g++ -std=c++17 -O2 -Wall -Wextra src/*.cpp -o smartfile
