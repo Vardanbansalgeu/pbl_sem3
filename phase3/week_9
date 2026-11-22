@@ -8,3 +8,6 @@ while (ok && copied < originalSize && input.get(ch)) {
     ++copied;
 }
 if (copied < originalSize) ok = false;
+
+bool useHuffman = (root != nullptr) && (huffmanTotal < originalSize);
+int mode = useHuffman ? 1 : 2;
