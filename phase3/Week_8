@@ -1,0 +1,31 @@
+// Week 8: read individual bits from a stream (most-significant bit first).
+class BitReader {
+    ifstream& input;
+    unsigned char buffer;
+    int bitsAvailable;
+    bool ok;
+public:
+    explicit BitReader(ifstream& in)
+        : input(in), buffer(0), bitsAvailable(0), ok(true) {}
+
+    int readBit() {
+        if (bitsAvailable == 0) {
+            char ch;
+            input.get(ch);
+            if (!input) {
+                ok = false;
+                return -1;
+            }
+            buffer = static_cast<unsigned char>(ch);
+            bitsAvailable = 8;
+        }
+        int bit = (buffer >> 7) & 1;
+        buffer = static_cast<unsigned char>(buffer << 1);
+        --bitsAvailable;
+        return bit;
+    }
+
+    bool good() const {
+        return ok && static_cast<bool>(input);
+    }
+};
