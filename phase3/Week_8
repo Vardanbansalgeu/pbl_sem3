@@ -29,3 +29,38 @@ public:
         return ok && static_cast<bool>(input);
     }
 };
+
+// Weeks 8-9: read the SmartFile header back.
+bool readSmartFileHeader(ifstream& in, int& mode, uint64_t& originalSize,
+                         unsigned long long frequency[256]) {
+    char magic[6];
+    in.read(magic, 6);
+    if (!in) return false;
+    for (int i = 0; i < 6; ++i)
+        if (magic[i] != "SFILE1"[i]) return false;
+
+    char modeByte;
+    in.get(modeByte);
+    if (!in) return false;
+    mode = static_cast<unsigned char>(modeByte);
+
+    originalSize = 0;
+    for (int i = 0; i < 8; ++i) {
+        char b;
+        in.get(b);
+        if (!in) return false;
+        originalSize |= static_cast<uint64_t>(static_cast<unsigned char>(b)) << (8 * i);
+    }
+
+    for (int i = 0; i < 256; ++i) {
+        uint64_t val = 0;
+        for (int j = 0; j < 8; ++j) {
+            char b;
+            in.get(b);
+            if (!in) return false;
+            val |= static_cast<uint64_t>(static_cast<unsigned char>(b)) << (8 * j);
+        }
+        frequency[i] = static_cast<unsigned long long>(val);
+    }
+    return true;
+}
