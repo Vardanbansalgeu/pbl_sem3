@@ -111,3 +111,41 @@ void handleDecompression() {
 
     decompressFile(inputFilename, outputFilename);
 }
+void runInteractiveMenu() {
+    int choice;
+
+    while (true) {
+        showMenu();
+
+        cout << "Enter your choice (1-3): ";
+
+        if (!(cin >> choice)) {
+            if (cin.eof()) break;
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input! Please enter a number (1-3).\n\n";
+            continue;
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        switch (choice) {
+            case 1:
+                handleCompression();
+                break;
+
+            case 2:
+                handleDecompression();
+                break;
+
+            case 3:
+                cout << "\nExiting SmartFile... Goodbye!\n";
+                return;
+
+            default:
+                cout << "\nInvalid choice! Please choose 1, 2, or 3.\n\n";
+        }
+    }
+}
