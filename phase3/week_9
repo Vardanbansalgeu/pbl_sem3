@@ -6,7 +6,7 @@ uint64_t copied = 0;
 while (ok && copied < originalSize && input.get(ch)) {
     output.put(ch);
     ++copied;
-}
+}.
 if (copied < originalSize) ok = false;
 
 bool useHuffman = (root != nullptr) && (huffmanTotal < originalSize);
