@@ -1,0 +1,58 @@
+void showMenu() {
+    cout << "==================================================\n";
+    cout << "              SMARTFILE APPLICATION               \n";
+    cout << "==================================================\n";
+    cout << "  1. Compress\n";
+    cout << "  2. Decompress\n";
+    cout << "  3. Exit\n";
+    cout << "==================================================\n";
+}
+
+void handleCompression() {
+    string inputFilename, outputFilename;
+
+    cout << "\n--- COMPRESS FILE ---\n";
+    cout << "Enter input file path: ";
+    getline(cin, inputFilename);
+
+    inputFilename = cleanPath(inputFilename);
+
+    if (inputFilename.empty()) {
+        cout << "Error: File path cannot be empty.\n\n";
+        return;
+    }
+
+    if (!fileExists(inputFilename)) {
+        cout << "Error: File '" << inputFilename << "' not found!\n\n";
+        return;
+    }
+
+    string defaultOutput = inputFilename + ".sfile";
+
+    cout << "Enter output .sfile path (press Enter for '"
+         << defaultOutput << "'): ";
+    getline(cin, outputFilename);
+
+    outputFilename = cleanPath(outputFilename);
+
+    if (outputFilename.empty())
+        outputFilename = defaultOutput;
+
+    if (isSameFile(inputFilename, outputFilename)) {
+        cout << "Error: Output path must be different from input path!\n\n";
+        return;
+    }
+
+    if (fileExists(outputFilename)) {
+        cout << "Warning: Output file already exists. Overwrite? (y/n): ";
+        string ans;
+        getline(cin, ans);
+
+        if (ans.empty() || (ans[0] != 'y' && ans[0] != 'Y')) {
+            cout << "Compression cancelled.\n\n";
+            return;
+        }
+    }
+
+    compressFile(inputFilename, outputFilename);
+}
