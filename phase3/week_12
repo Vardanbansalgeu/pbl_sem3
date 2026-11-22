@@ -1,0 +1,14 @@
+int handleCommandLine(int argc, char* argv[]) {
+    string command = argv[1];
+    string input = cleanPath(argv[2]);
+    string output = cleanPath(argv[3]);
+
+    if (command == "compress" || command == "-c")
+        return compressFile(input, output) ? 0 : 1;
+
+    if (command == "decompress" || command == "-d")
+        return decompressFile(input, output) ? 0 : 1;
+
+    cout << "Unknown command: " << command << "\n";
+    return 1;
+}
