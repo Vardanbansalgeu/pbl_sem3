@@ -64,3 +64,84 @@ bool readSmartFileHeader(ifstream& in, int& mode, uint64_t& originalSize,
     }
     return true;
 }
+
+// Weeks 8-9: decode a .sfile back to the original data (Huffman or RAW).
+bool decompressFile(const string& inputName, const string& outputName) {
+    ifstream input(inputName.c_str(), ios::binary);
+    if (!input) {
+        cout << "Cannot open input file!\n";
+        return false;
+    }
+
+    int mode = 0;
+    uint64_t originalSize = 0;
+    unsigned long long frequency[256] = {0};
+
+    if (!readSmartFileHeader(input, mode, originalSize, frequency)) {
+        cout << "Invalid or corrupted .sfile header!\n";
+        return false;
+    }
+
+    ofstream output(outputName.c_str(), ios::binary | ios::trunc);
+    if (!output) {
+        cout << "Cannot create output file!\n";
+        return false;
+    }
+
+    bool ok = true;
+
+    if (mode == 2) {
+        // Week 9: RAW mode — copy original bytes directly.
+        char ch;
+        uint64_t copied = 0;
+        while (copied < originalSize && input.get(ch)) {
+            output.put(ch);
+            ++copied;
+        }
+        if (copied < originalSize) ok = false;
+    } else if (mode == 1) {
+        // Week 8: Huffman mode — rebuild tree and decode bits.
+        HuffmanNode* root = buildHuffmanTree(frequency);
+
+        if (root == nullptr) {
+            ok = true; // empty file
+        } else {
+            BitReader reader(input);
+            uint64_t decoded = 0;
+            while (decoded < originalSize && reader.good()) {
+                HuffmanNode* node = root;
+                if (node->left == nullptr && node->right == nullptr) {
+                    output.put(static_cast<char>(node->data));
+                    ++decoded;
+                    continue;
+                }
+                while (node->left != nullptr || node->right != nullptr) {
+                    int bit = reader.readBit();
+                    if (bit < 0) { ok = false; break; }
+                    node = (bit == 0) ? node->left : node->right;
+                    if (node == nullptr) { ok = false; break; }
+                }
+                if (!ok) break;
+                output.put(static_cast<char>(node->data));
+                ++decoded;
+            }
+            if (decoded < originalSize) ok = false;
+            deleteTree(root);
+        }
+    } else {
+        cout << "Unknown mode in .sfile!\n";
+        ok = false;
+    }
+
+    output.close();
+    if (!ok || output.fail()) {
+        cout << "Decompression failed (read/write error).\n";
+        return false;
+    }
+
+    cout << "Decompression completed!\n";
+    cout << "Output: " << outputName << "\n";
+    cout << "Original size: " << originalSize << " bytes\n";
+    cout << "Mode: " << (mode == 1 ? "HUFFMAN" : (mode == 2 ? "RAW" : "UNKNOWN")) << "\n";
+    return true;
+}
